@@ -1,0 +1,117 @@
+<project name="build" default="build" basedir=".">
+    
+    <taskdef resource="PCT.properties" />
+    <taskdef resource="net/sf/antcontrib/antlib.xml" />
+    <typedef resource="types.properties" />
+  
+    <target name="build" depends="initvars,init">
+      <antcall target="builddbs" /> 
+      <antcall target="compile" />
+      <antcall target="package" />
+    </target>
+  
+    <target name="initvars"  unless="varsinitialized">
+        
+      <property name="rootdir" location="./.." />
+      <property name="srcdir" location="." />
+      <property name="dfdir" location="${srcdir}/schema" />
+      <property name="builddir" location="${rootdir}/build" />
+      <property name="dbsdir" location="${builddir}/db" />
+      <property name="deploydir" location="${builddir}/deploy" />
+      <property name="tmpdir" location="${rootdir}/tmp" />
+      <property name="DLC" value="/usr/dlc" />
+  
+      <echo message="rootdir:       ${rootdir}" />
+      <echo message="srcdir:        ${srcdir}" />
+      <echo message="dfdir:         ${dfdir}" />
+      <echo message="builddir:      ${builddir}" />
+      <echo message="dbsdir:        ${dbsdir}" />
+      <echo message="deploydir:     ${deploydir}" />
+      <echo message="tmpdir:        ${tmpdir}" />
+      <echo message="DLC:           ${DLC}" />
+        
+      <property name="varsinitialized" value="true" />    
+  
+    </target>
+      
+    <macrodef name="builddb">
+  
+      <attribute name="dbname" />
+      <attribute name="destDir" />
+  
+      <sequential>
+        <PCTCreateDatabase dbName="@{dbname}" destDir="@{destDir}" dlchome="${DLC}" schemaFile="${dfdir}/@{dbname}.df" structFile="${dfdir}/@{dbname}.st" />
+      </sequential>
+    </macrodef>	
+  
+    <target name="init" unless="initialized">
+      <delete dir="${builddir}" failonerror="false" />
+      <mkdir dir="${builddir}" />   
+      <mkdir dir="${tmpdir}" />
+      <property name="initialized" value="true" />  
+      <DlcHome value="${DLC}" />  
+    </target>
+    
+    <target name="builddbs">
+      <mkdir dir="${dbsdir}" />
+      <for list="sports2020" param="dbname">  <!-- for multiple dbs, the "list" property is comma separated -->
+        <sequential>
+          <builddb dbname="@{dbname}" destDir="${dbsdir}"/>
+        </sequential>
+      </for>
+    </target>
+      
+    <target name="compile" depends="initvars">
+      
+      <mkdir dir="${builddir}/xref_out" />
+      
+      <DBConnectionSet id="sports2020-dbs">
+        <DBConnection dbName="sports2020" dbDir="${dbsdir}" singleUser="true" />
+      </DBConnectionSet>   
+      
+      <PCTCompile destdir="${builddir}/rcode" stopOnError="false" 
+          graphicalMode="false" forceCompile="true" MD5="true" 
+          keepXref="true" xrefDir="${builddir}/xref_out"
+          requireFullKeywords="false" requireFullNames="false" requireFieldQualifiers="false" 
+          tempDir="${tmpdir}" paramfile="${srcdir}/scripts/build.compile.pf">
+        
+        <DBConnectionSet refid="sports2020-dbs"/>
+          
+        <propath>
+          <pathelement path="${srcdir}" />
+          <pathelement path="${DLC}/tty/OpenEdge.Core.pl" />
+          <pathelement path="${DLC}/tty/netlib/OpenEdge.Net.pl" />
+        </propath>
+          
+        <fileset dir="${srcdir}" excludesfile="${srcdir}/build.excludes">
+          <include name="**/*.p" />
+          <include name="**/*.cls" />
+        </fileset>
+          
+      </PCTCompile>
+      
+    </target>
+    
+    <target name="package">
+      
+      <mkdir dir="${deploydir}" />
+      <delete>
+        <fileset dir="${deploydir}" defaultexcludes="false"/>
+      </delete>
+
+      <PCTLibrary destFile="${deploydir}/sports2020.pl" noCompress="true">  <!-- noCompress because of error 1913 -->
+        <fileset dir="${builddir}/rcode">
+          <include name="**/*.r" />
+        </fileset>
+      </PCTLibrary>
+      
+      <tar destfile="${deploydir}/xref.tar.gz" compression="gzip" >
+        <fileset dir="${builddir}/xref_out">
+          <include name="**/*" />
+        </fileset>  
+      </tar>
+  
+    </target>
+    
+  </project>
+  

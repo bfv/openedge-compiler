@@ -1,0 +1,9 @@
+
+artifacts/
+license/
+
+response-*.ini
+progress-*.ini
+
+response-*.cfg
+progress-*.cfg
