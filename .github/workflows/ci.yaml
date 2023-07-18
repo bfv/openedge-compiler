@@ -25,6 +25,6 @@ jobs:
 
       - name: download installer files
         run: |
-          docker run -d defbfvio/oe-install:${{matrix.version}}
+          docker run -d devbfvio/oeinstaller:${{matrix.version}}
       
       
