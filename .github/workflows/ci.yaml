@@ -23,8 +23,15 @@ jobs:
         with:
           path: src
 
-      - name: download installer files
+      - name: Download installer files
         run: |
           docker run -d devbfvio/oeinstaller:${{matrix.version}}
       
-      
+      - name: Get version info
+        run: |
+          v=${{matrix.version}}
+          flatversion=`echo ${v%\.*} | sed "s/\.//g"`
+          echo flattened minor version: $flatversion
+          echo "FLATVERSION=${flatversion}" >> $GITHUB_ENV
+          echo "OPENEDGE_VERSION=${{matrix.version}}" >> $GITHUB_ENV
+        
