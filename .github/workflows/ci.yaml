@@ -23,10 +23,6 @@ jobs:
         with:
           path: src
 
-      - name: Download installer files
-        run: |
-          docker run -d devbfvio/oeinstaller:${{matrix.version}}
-      
       - name: Get version info
         run: |
           v=${{matrix.version}}
@@ -35,11 +31,15 @@ jobs:
           echo "FLATVERSION=${flatversion}" >> $GITHUB_ENV
           echo "OPENEDGE_VERSION=${{matrix.version}}" >> $GITHUB_ENV
 
+      - name: Download installer files
+        run: |
+          docker run -v ${PWD}/src:/target devbfvio/oeinstaller:${{matrix.version}}
+      
       - name: Get reponse.ini  # get progress.cfg from secret PROGRESS_CFG_122
         run: |
           echo fetching progress.cfg from secret RESPONSE_INI_${{env.FLATVERSION}}
-          echo "${{ secrets[format('RESPONSE_INI_{0}', env.FLATVERSION)] }}" > src/response-${{env.FLATVERSION}}.ini
-          ls -l src | grep -v 'response'
-          cat src/response-127.ini
+          echo "${{ secrets[format('RESPONSE_INI_{0}', env.FLATVERSION)] }}" > src/response.ini
+          ls -l src
+
 
   
