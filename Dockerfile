@@ -4,9 +4,11 @@ ENV JAVA_HOME=/opt/java/openjdk
 COPY --from=eclipse-temurin:17.0.6_10-jdk $JAVA_HOME $JAVA_HOME
 ENV PATH="${JAVA_HOME}/bin:${PATH}"
 
-ADD PROGRESS_OE_12.7_LNX_64.tar.gz /install/openedge
+# the running process (i.e. the github action) is responsible for placing the install .tar 
+# in the correct location
+ADD PROGRESS_OE.tar.gz /install/openedge
 
-COPY response-4gldevsys-127.ini /install/openedge/response.ini
+COPY response.ini /install/openedge/response.ini
 ENV TERM xterm
 
 RUN /install/openedge/proinst -b /install/openedge/response.ini -l /install/install_oe.log -n && \
