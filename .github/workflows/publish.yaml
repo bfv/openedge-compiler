@@ -46,7 +46,7 @@ jobs:
           echo flattened minor version: $flatversion
           echo "FLATVERSION=${flatversion}" >> $GITHUB_ENV
           echo "OPENEDGE_VERSION=${{ inputs.openedgeversion }}" >> $GITHUB_ENV
-          echo "IMAGE_NAME=${{ vars.IMAGE_PREFIX}}${{ inputs.openedgeversion }}" >> $GITHUB_ENV
+          echo "IMAGE_NAME=${{ vars.IMAGE_PREFIX}}openedge-compiler:${{ inputs.openedgeversion }}" >> $GITHUB_ENV
 
       - name: Download installer files
         run: |
@@ -82,3 +82,14 @@ jobs:
             ${{env.IMAGE_NAME}} \
             /app/src/scripts/build.sh
           ls -l artifacts
+
+      - name: Login to registry
+        uses: docker/login-action@465a07811f14bebb1938fbed4728c6a1ff8901fc  # v2.2.0
+        with:
+          registry: ${{ vars.REGISTRY_DOMAIN }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+      
+      - name: Push image to registry
+        run: |
+          docker push ${{env.IMAGE_NAME}}
