@@ -56,11 +56,14 @@ jobs:
       
       - name: Execute test build
         run: |
+          ls -l 
           mkdir artifacts
           docker run \
-            -v ${PWD}/src:/app/src \
+            -v ${PWD}/src/src:/app/src \
             -v ${PWD}/artifacts:/artifacts \
             -v ${PWD}/src/progress.cfg:/usr/dlc/progress.cfg \
             openedge-compiler:${{env.OPENEDGE_VERSION}} \
             /app/src/scripts/build.sh
+          ls -l artifacts
+          
   
