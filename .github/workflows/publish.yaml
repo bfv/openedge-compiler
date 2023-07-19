@@ -48,6 +48,14 @@ jobs:
           echo "OPENEDGE_VERSION=${{ inputs.openedgeversion }}" >> $GITHUB_ENV
           echo "IMAGE_NAME=${{ vars.IMAGE_PREFIX}}openedge-compiler:${{ inputs.openedgeversion }}" >> $GITHUB_ENV
 
+      - name: Insert JDK version in Dockerfile
+        run: |
+          jdk=`jq -r ".jdk${FLATVERSION}" src/jdk-versions.json`
+          echo JDK: $jdk
+          sed -i "s/JDKVERSION/$jdk/g" src/Dockerfile
+          echo download jdk from Dockerfile:
+          cat src/Dockerfile | grep temurin
+      
       - name: Download installer files
         run: |
           docker run -v ${PWD}/src:/target devbfvio/oeinstaller:${{env.OPENEDGE_VERSION}}
