@@ -30,6 +30,14 @@ jobs:
           echo flattened minor version: $flatversion
           echo "FLATVERSION=${flatversion}" >> $GITHUB_ENV
           echo "OPENEDGE_VERSION=${{matrix.version}}" >> $GITHUB_ENV
+
+      - name: Insert JDK version in Dockerfile
+        run: |
+          jdk=`jq -r ".jdk${FLATVERSION}" src/jdk-versions.json`
+          echo JDK: $jdk
+          sed -i "s/JDKVERSION/$jdk/g" src/Dockerfile
+          echo download jdk from Dockerfile:
+          cat src/Dockerfile | grep temurin
   
       - name: Download installer files
         run: |
