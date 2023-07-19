@@ -1,0 +1,22 @@
+name: publish compiler image
+
+on:
+  workflow_dispatch:
+    inputs:
+      openedgeversion:
+        type: string
+        description: "enter OpenEdge version (x.y.z, f.e. 12.7.0)"
+        required: true
+            
+run-name: publish openedge-compiler:${{ inputs.openedgeversion }} 
+
+jobs:
+  publish:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: first test
+        run: |
+          echo publish openedge-compiler:${{ github.event.inputs.openedgeversion }}
+    
