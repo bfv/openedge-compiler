@@ -6,19 +6,33 @@ on:
       openedgeversion:
         type: string
         description: "enter OpenEdge version (x.y.z, f.e. 12.7.0)"
+        default: "12.7.0"
         required: true
-            
-run-name: publish openedge-compiler:${{ inputs.openedgeversion }} 
+      targetregistry:
+        type: choice
+        description: Choose target image registry
+        default: "dockerhub-devbfvio"
+        required: true
+        options:
+          - dockerhub-devbfvio
+          - flusso
+              
+run-name: publish openedge-compiler:${{ inputs.openedgeversion }} to ${{ github.event.inputs.targetregistry }}
 
 jobs:
   publish:
 
     runs-on: ubuntu-latest
 
+    environment:
+        name: ${{ github.event.inputs.targetregistry }}
+
     steps:
-      - name: first test
+      - name: display info
         run: |
           echo publish openedge-compiler:${{ github.event.inputs.openedgeversion }}
+          echo target registry: ${{ github.event.inputs.targetregistry }}
+          echo image prefix: ${{ vars.IMAGE_PREFIX }}
     
       - name: Checkout repository
         uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8         # v3.1.0
@@ -32,7 +46,7 @@ jobs:
           echo flattened minor version: $flatversion
           echo "FLATVERSION=${flatversion}" >> $GITHUB_ENV
           echo "OPENEDGE_VERSION=${{ inputs.openedgeversion }}" >> $GITHUB_ENV
-          echo "IMAGE_NAME=${{ env.IMAGE_PREFIX}}${{ inputs.openedgeversion }}" >> $GITHUB_ENV
+          echo "IMAGE_NAME=${{ vars.IMAGE_PREFIX}}${{ inputs.openedgeversion }}" >> $GITHUB_ENV
 
       - name: Download installer files
         run: |
@@ -68,6 +82,3 @@ jobs:
             ${{env.IMAGE_NAME}} \
             /app/src/scripts/build.sh
           ls -l artifacts
-
-      
-    
