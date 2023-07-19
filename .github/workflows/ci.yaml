@@ -54,6 +54,13 @@ jobs:
           rm response.ini
           ls -l 
       
-      
-
+      - name: Execute test build
+        run: |
+          mkdir artifacts
+          docker run \
+            -v ${PWD}/src:/app/src \
+            -v ${PWD}/artifacts:/artifacts \
+            -v ${PWD}/src/progress.cfg:/usr/dlc/progress.cfg \
+            openedge-compiler:${{env.OPENEDGE_VERSION}} \
+            /app/src/scripts/build.sh
   
