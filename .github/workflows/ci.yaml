@@ -44,8 +44,15 @@ jobs:
       - name: Build docker image
         run: |
           cd src
-          docker build -t devbfvio/openedge-compiler:${{env.OPENEDGE_VERSION}} .
+          docker build -t openedge-compiler:${{env.OPENEDGE_VERSION}} .
 
-          
+      - name: Remove installer files
+        run: |
+          cd src
+          rm -f PROGRESS_*
+          rm response.ini
+          ls -l 
+      
+      
 
   
