@@ -33,9 +33,9 @@ jobs:
   
       - name: Download installer files
         run: |
-          docker run -v ${PWD}/src:/target devbfvio/oeinstaller:${{matrix.version}}
+          docker run -v ${PWD}/src:/target devbfvio/oeinstaller:${{env.OPENEDGE_VERSION}}
       
-      - name: Get reponse.ini  # get progress.cfg from secret PROGRESS_CFG_122
+      - name: Get response.ini  # get progress.cfg from secret PROGRESS_CFG_122
         run: |
           echo fetching response.ini/progress.cfg from secret RESPONSE_INI_${{env.FLATVERSION}}
           echo "${{ secrets[format('RESPONSE_INI_{0}', env.FLATVERSION)] }}" > src/response.ini
