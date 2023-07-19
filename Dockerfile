@@ -1,7 +1,7 @@
 FROM ubuntu:20.04 as install
 
 ENV JAVA_HOME=/opt/java/openjdk
-COPY --from=eclipse-temurin:17.0.6_10-jdk $JAVA_HOME $JAVA_HOME
+COPY --from=eclipse-temurin:JDKVERSION $JAVA_HOME $JAVA_HOME
 ENV PATH="${JAVA_HOME}/bin:${PATH}"
 
 # the running process (i.e. the github action) is responsible for placing the install .tar 
