@@ -3,22 +3,22 @@ name: test
 on: 
   [ workflow_dispatch ]
 
-run-name: publish openedge-compiler:${{ inputs.openedgeversion }} 
+run-name: test transfer info/files/image between jobs 
 
 jobs:
-  publish:
-
+  build:
     runs-on: ubuntu-latest
-
     steps:
-
       - name: Checkout repository
         uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8         # v3.1.0
         with:
           path: src
-      
-      - name: Get JDK version
+      - name: Build image
         run: |
-          jdk=`jq -r '.jdk127' src/jdk-versions.json`
-          echo 12.7 JDK: ${jdk}
-  
+          docker build -t testimage -f src/test/Dockerfile src/test
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: run
+        run: |
+          docker run testimage
