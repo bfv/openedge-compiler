@@ -15,7 +15,7 @@ on:
         required: true
         options:
           - dockerhub-devbfvio
-          - flusso
+          - flusso-boostermeyer
               
 run-name: publish openedge-compiler:${{ inputs.openedgeversion }} to ${{ github.event.inputs.targetregistry }}
 
