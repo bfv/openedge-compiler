@@ -1,4 +1,4 @@
-name: publish compiler image
+name: Publish image
 
 on:
   workflow_dispatch:
@@ -46,7 +46,7 @@ jobs:
           echo flattened minor version: $flatversion
           echo "FLATVERSION=${flatversion}" >> $GITHUB_ENV
           echo "OPENEDGE_VERSION=${{ inputs.openedgeversion }}" >> $GITHUB_ENV
-          echo "IMAGE_NAME=${{ vars.IMAGE_PREFIX}}openedge-compiler:${{ inputs.openedgeversion }}" >> $GITHUB_ENV
+          echo "IMAGE_NAME=${{ vars.REGISTRY_DOMAIN }}/${{ vars.IMAGE_PREFIX}}openedge-compiler:${{ inputs.openedgeversion }}" >> $GITHUB_ENV
 
       - name: Insert JDK version in Dockerfile
         run: |
