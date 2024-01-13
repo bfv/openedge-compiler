@@ -23,6 +23,7 @@ LABEL maintainer="Bronco Oostermeyer <dev@bfv.io>"
 ENV JAVA_HOME=/opt/java/openjdk
 ENV DLC=/usr/dlc
 ENV WRKDIR=/usr/wrk
+ENV TERM xterm
 
 COPY --from=install $JAVA_HOME $JAVA_HOME
 COPY --from=install $DLC $DLC
