@@ -11,8 +11,9 @@ ADD PROGRESS_OE.tar.gz /install/openedge
 COPY response.ini /install/openedge/response.ini
 ENV TERM xterm
 
-RUN /install/openedge/proinst -b /install/openedge/response.ini -l /install/install_oe.log -n && \
-    rm /usr/dlc/progress.cfg
+RUN /install/openedge/proinst -b /install/openedge/response.ini -l /install/install_oe.log -n 
+RUN /usr/dlc/bin/proDebugEnable -enable-all
+RUN rm /usr/dlc/progress.cfg
 
 # multi stage build, this give the possibilty to remove all the slack from stage 0
 FROM ubuntu:20.04 as instance
