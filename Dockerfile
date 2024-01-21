@@ -15,6 +15,9 @@ RUN /install/openedge/proinst -b /install/openedge/response.ini -l /install/inst
 RUN /usr/dlc/bin/proDebugEnable -enable-all
 RUN rm /usr/dlc/progress.cfg
 
+# 12.8 FCS has a PCT issue with dumping .df files:
+COPY PCT-227.jar /usr/dlc/pct/PCT.jar
+
 # multi stage build, this give the possibilty to remove all the slack from stage 0
 FROM ubuntu:20.04 as instance
 
