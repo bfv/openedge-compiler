@@ -1,4 +1,4 @@
-FROM ubuntu:20.04 as install
+FROM ubuntu:22.04 as install
 
 ENV JAVA_HOME=/opt/java/openjdk
 COPY --from=eclipse-temurin:JDKVERSION $JAVA_HOME $JAVA_HOME
@@ -12,6 +12,7 @@ COPY response.ini /install/openedge/response.ini
 ENV TERM xterm
 
 RUN /install/openedge/proinst -b /install/openedge/response.ini -l /install/install_oe.log -n 
+RUN /install/install_oe.log
 RUN /usr/dlc/bin/proDebugEnable -enable-all
 RUN rm /usr/dlc/progress.cfg
 
@@ -19,7 +20,7 @@ RUN rm /usr/dlc/progress.cfg
 COPY PCT-227.jar /usr/dlc/pct/PCT.jar
 
 # multi stage build, this give the possibilty to remove all the slack from stage 0
-FROM ubuntu:20.04 as instance
+FROM ubuntu:22.04 as instance
 
 LABEL maintainer="Bronco Oostermeyer <dev@bfv.io>"
 
