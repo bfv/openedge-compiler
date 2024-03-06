@@ -36,3 +36,5 @@ COPY --from=install $WRKDIR $WRKDIR
 RUN mkdir -p /app/src && mkdir /artifacts
 
 WORKDIR /app/src
+
+ENV PATH="${DLC}:${DLC}/bin:${JAVA_HOME}/bin:${PATH}"
