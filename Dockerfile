@@ -12,7 +12,7 @@ COPY response.ini /install/openedge/response.ini
 ENV TERM xterm
 
 RUN /install/openedge/proinst -b /install/openedge/response.ini -l /install/install_oe.log -n 
-RUN /install/install_oe.log
+RUN cat /install/install_oe.log
 RUN /usr/dlc/bin/proDebugEnable -enable-all
 RUN rm /usr/dlc/progress.cfg
 
