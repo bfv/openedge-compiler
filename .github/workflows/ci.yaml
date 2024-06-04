@@ -19,21 +19,24 @@ jobs:
     steps:
 
       - name: Checkout repository
-        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8         # v3.1.0
+        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29  # v4.1.6
         with:
           path: src
 
-      - name: Get version info
+      - name: Get OpenEdge version
+        id: get-oeversion
+        uses: bfv/openedge-flatversion@v1.1.0
+        with:
+          version: ${{matrix.version}}
+
+      - name: Version to env
         run: |
-          v=${{matrix.version}}
-          flatversion=`echo ${v%\.*} | sed "s/\.//g"`
-          echo flattened minor version: $flatversion
-          echo "FLATVERSION=${flatversion}" >> $GITHUB_ENV
+          echo "FLATVERSION=${{ steps.get-oeversion.outputs.flat-version }}" >> $GITHUB_ENV
           echo "OPENEDGE_VERSION=${{matrix.version}}" >> $GITHUB_ENV
 
       - name: Insert JDK version in Dockerfile
         run: |
-          jdk=`jq -r ".jdk${FLATVERSION}" src/jdk-versions.json`
+          jdk=`jq -r ".jdk${{env.FLATVERSION}}" src/jdk-versions.json`
           echo JDK: $jdk
           sed -i "s/JDKVERSION/$jdk/g" src/Dockerfile
           echo download jdk from Dockerfile:
