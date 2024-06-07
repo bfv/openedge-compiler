@@ -73,7 +73,8 @@
           graphicalMode="false" forceCompile="true" MD5="true" 
           keepXref="true" xrefDir="${builddir}/xref_out"
           requireFullKeywords="false" requireFullNames="false" requireFieldQualifiers="false" 
-          tempDir="${tmpdir}" paramfile="${srcdir}/scripts/build.compile.pf">
+          tempDir="${tmpdir}" paramfile="${srcdir}/scripts/build.compile.pf"
+          displayFiles="2">
         
         <DBConnectionSet refid="sports2020-dbs"/>
           
