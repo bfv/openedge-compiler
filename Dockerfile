@@ -16,6 +16,9 @@ RUN cat /install/install_oe.log
 RUN /usr/dlc/bin/proDebugEnable -enable-all
 RUN rm /usr/dlc/progress.cfg
 
+COPY clean-dlc.sh /install/openedge/clean-dlc.sh
+RUN /install/openedge/clean-dlc.sh
+
 # 12.8 FCS has a PCT issue with dumping .df files:
 COPY PCT-228.jar /usr/dlc/pct/PCT.jar
 
