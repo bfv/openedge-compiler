@@ -10,6 +10,7 @@ rm -rf /usr/dlc/esbadapter
 rm -rf /usr/dlc/gradle
 rm -f  /usr/dlc/inst_hlp
 #rm -rf /usr/dlc/install*  ## DO NOT DELETE FOR 12.8
+rm -f /usr/dlc/java/ext/esapi-2.5.2.0.jar
 rm -f  /usr/dlc/newk*
 rm -rf /usr/dlc/odbc
 rm -rf /usr/dlc/oebuild
