@@ -5,9 +5,14 @@ on:
     inputs:
       openedgeversion:
         type: string
-        description: "enter OpenEdge version (x.y.z, f.e. 12.7.0)"
-        default: "12.7.0"
+        description: "OpenEdge version"
+        default: "12.8.3"
         required: true
+      targettag:
+          type: string
+          description: "target tag"
+          default: "12.8.3"
+          required: true
       targetregistry:
         type: choice
         description: Choose target image registry
@@ -17,7 +22,7 @@ on:
           - dockerhub-devbfvio
           - flusso-boostermeyer
               
-run-name: publish openedge-compiler:${{ inputs.openedgeversion }} to ${{ github.event.inputs.targetregistry }}
+run-name: publish openedge-compiler:${{ inputs.targettag }} to ${{ github.event.inputs.targetregistry }}
 
 jobs:
   publish:
@@ -46,7 +51,7 @@ jobs:
           echo flattened minor version: $flatversion
           echo "FLATVERSION=${flatversion}" >> $GITHUB_ENV
           echo "OPENEDGE_VERSION=${{ inputs.openedgeversion }}" >> $GITHUB_ENV
-          echo "IMAGE_NAME=${{ vars.REGISTRY_DOMAIN }}/${{ vars.IMAGE_PREFIX}}openedge-compiler:${{ inputs.openedgeversion }}" >> $GITHUB_ENV
+          echo "IMAGE_NAME=${{ vars.REGISTRY_DOMAIN }}/${{ vars.IMAGE_PREFIX}}openedge-compiler:${{ inputs.targettag }}" >> $GITHUB_ENV
 
       - name: Insert JDK version in Dockerfile
         run: |
