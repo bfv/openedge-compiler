@@ -81,3 +81,6 @@ strategy:
 So 3 versions.
 
 The example/test creates a sports2020 database, compiles `getcustomers.p` (which needs the db) and puts it in the sports2020 which is placed in `/artifacts` along with a file list (`prolib -list`).
+
+# tags
+latest = 12.8.4

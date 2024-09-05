@@ -13,6 +13,7 @@ ENV TERM xterm
 
 RUN /install/openedge/proinst -b /install/openedge/response.ini -l /install/install_oe.log -n 
 RUN cat /install/install_oe.log
+RUN ls -l /usr/dlc/bin
 RUN /usr/dlc/bin/proDebugEnable -enable-all
 RUN rm /usr/dlc/progress.cfg
 
