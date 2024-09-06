@@ -27,7 +27,7 @@ run-name: publish openedge-compiler:${{ inputs.targettag }} to ${{ github.event.
 jobs:
   publish:
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22:04
 
     environment:
         name: ${{ github.event.inputs.targetregistry }}
@@ -44,13 +44,17 @@ jobs:
         with:
           path: src
   
-      - name: Get version info
+      - name: Get OpenEdge version
+        id: get-oeversion
+        uses: bfv/openedge-flatversion@49ecdca1670447fcf715c0b505607ec17dc59b62  # v1.2.1
+        with:
+          version: ${{ inputs.openedgeversion }}
+  
+      - name: Version to env
         run: |
-          v=${{ inputs.openedgeversion }}
-          flatversion=`echo ${v%\.*} | sed "s/\.//g"`
-          echo flattened minor version: $flatversion
-          echo "FLATVERSION=${flatversion}" >> $GITHUB_ENV
+          echo "FLATVERSION=${{ steps.get-oeversion.outputs.flat-version }}" >> $GITHUB_ENV
           echo "OPENEDGE_VERSION=${{ inputs.openedgeversion }}" >> $GITHUB_ENV
+          echo "OPENEDGE_BASE_VERSION=${{ steps.get-oeversion.outputs.base-version }}" >> $GITHUB_ENV
           echo "IMAGE_NAME=${{ vars.REGISTRY_DOMAIN }}/${{ vars.IMAGE_PREFIX}}openedge-compiler:${{ inputs.targettag }}" >> $GITHUB_ENV
 
       - name: Insert JDK version in Dockerfile
@@ -63,7 +67,7 @@ jobs:
       
       - name: Download installer files
         run: |
-          docker run -v ${PWD}/src:/target devbfvio/oeinstaller:${{env.OPENEDGE_VERSION}}
+          src/scripts/download-openedge.sh
         
       - name: Get response.ini  # get progress.cfg from secret PROGRESS_CFG_122
         run: |
