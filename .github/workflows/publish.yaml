@@ -27,7 +27,7 @@ run-name: publish openedge-compiler:${{ inputs.targettag }} to ${{ github.event.
 jobs:
   publish:
 
-    runs-on: ubuntu-22:04
+    runs-on: ubuntu-latest
 
     environment:
         name: ${{ github.event.inputs.targetregistry }}
