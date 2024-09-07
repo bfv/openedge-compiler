@@ -40,7 +40,7 @@
       <attribute name="destDir" />
   
       <sequential>
-        <PCTCreateDatabase dbName="@{dbname}" destDir="@{destDir}" dlchome="${DLC}" schemaFile="${dfdir}/@{dbname}.df" structFile="${dfdir}/@{dbname}.st" />
+        <PCTCreateDatabase dbName="@{dbname}" destDir="@{destDir}" dlchome="${DLC}" schemaFile="${dfdir}/@{dbname}.df" structFile="${dfdir}/@{dbname}.st" tempDir="${tmpdir}" />
       </sequential>
     </macrodef>	
   

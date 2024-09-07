@@ -70,6 +70,8 @@ jobs:
         run: |
           ls -l 
           mkdir artifacts
+          chmod ugo=rwx -R ${PWD}/artifacts 
+          chmod u=rwx,og=rx -R ${PWD}/src   # don't write to src!
           docker run \
             -v ${PWD}/src/src:/app/src \
             -v ${PWD}/artifacts:/artifacts \
