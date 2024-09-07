@@ -19,7 +19,7 @@ rm -rf /usr/dlc/perl
 rm -rf /usr/dlc/prohelp
 rm -rf /usr/dlc/prolang/ame
 rm -rf /usr/dlc/prolang/utf
-rm -rf /usr/dlc/servers/redist
+rm -rf /usr/dlc/servers
 rm -rf /usr/dlc/sonic
 rm -rf /usr/dlc/src
 rm -rf /usr/dlc/templates

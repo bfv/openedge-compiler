@@ -10,11 +10,11 @@ permissions:
 jobs:
   build:
     
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     
     strategy:
       matrix:
-        version: [ 11.7.19, 12.2.15, 12.8.3 ]
+        version: [ 11.7.20, 12.2.16, 12.8.3, 12.8.4 ]
     
     steps:
 
@@ -25,7 +25,7 @@ jobs:
 
       - name: Get OpenEdge version
         id: get-oeversion
-        uses: bfv/openedge-flatversion@v1.1.0
+        uses: bfv/openedge-flatversion@49ecdca1670447fcf715c0b505607ec17dc59b62  # v1.2.1
         with:
           version: ${{matrix.version}}
 
@@ -33,6 +33,7 @@ jobs:
         run: |
           echo "FLATVERSION=${{ steps.get-oeversion.outputs.flat-version }}" >> $GITHUB_ENV
           echo "OPENEDGE_VERSION=${{matrix.version}}" >> $GITHUB_ENV
+          echo "OPENEDGE_BASE_VERSION=${{ steps.get-oeversion.outputs.base-version }}" >> $GITHUB_ENV
 
       - name: Insert JDK version in Dockerfile
         run: |
@@ -44,7 +45,7 @@ jobs:
   
       - name: Download installer files
         run: |
-          docker run -v ${PWD}/src:/target devbfvio/oeinstaller:${{env.OPENEDGE_VERSION}}
+          src/scripts/download-openedge.sh
       
       - name: Get response.ini  # get progress.cfg from secret PROGRESS_CFG_122
         run: |
@@ -69,6 +70,8 @@ jobs:
         run: |
           ls -l 
           mkdir artifacts
+          chmod ugo=rwx -R ${PWD}/artifacts 
+          chmod u=rwx,og=rx -R ${PWD}/src   # don't write to src!
           docker run \
             -v ${PWD}/src/src:/app/src \
             -v ${PWD}/artifacts:/artifacts \

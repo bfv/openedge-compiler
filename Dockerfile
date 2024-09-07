@@ -6,12 +6,15 @@ ENV PATH="${JAVA_HOME}/bin:${PATH}"
 
 # the running process (i.e. the github action) is responsible for placing the install .tar 
 # in the correct location
-ADD PROGRESS_OE.tar.gz /install/openedge
+ADD PROGRESS_OE.tar.gz /install/openedge/
+ADD PROGRESS_PATCH_OE.tar.gz /install/patch/
+ADD scripts/install-openedge.sh /install/
 
 COPY response.ini /install/openedge/response.ini
 ENV TERM xterm
 
-RUN /install/openedge/proinst -b /install/openedge/response.ini -l /install/install_oe.log -n 
+RUN /install/install-openedge.sh
+
 RUN cat /install/install_oe.log
 RUN /usr/dlc/bin/proDebugEnable -enable-all
 RUN rm /usr/dlc/progress.cfg
@@ -27,13 +30,31 @@ LABEL maintainer="Bronco Oostermeyer <dev@bfv.io>"
 ENV JAVA_HOME=/opt/java/openjdk
 ENV DLC=/usr/dlc
 ENV WRKDIR=/usr/wrk
-ENV TERM xterm
+ENV TERM=xterm
+
+RUN groupadd -g 1000 openedge && \
+    useradd -r -u 1000 -g openedge openedge
 
 COPY --from=install $JAVA_HOME $JAVA_HOME
 COPY --from=install $DLC $DLC
 COPY --from=install $WRKDIR $WRKDIR
 
-RUN mkdir -p /app/src && mkdir /artifacts
+# allow for progress to be copied into $DLC
+# kubernetes does not support volume mount of single files
+RUN chown root:openedge $DLC $WRKDIR && \
+    chmod 775 $DLC && \
+    chmod 777 $WRKDIR
+
+# if not present ESAM starts complaining
+# this file is necessary in order for a Dockerfile which uses the openedge-pas image to 
+# be able to use oeprop.sh to set properties
+RUN touch /usr/dlc/progress.cfg  && \
+    chown openedge:openedge /usr/dlc/progress.cfg
+
+RUN mkdir -p /app/src && mkdir /artifacts && \
+    chown -R openedge:openedge /app /artifacts
+
+USER openedge
 
 WORKDIR /app/src
 

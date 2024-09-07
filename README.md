@@ -81,3 +81,11 @@ strategy:
 So 3 versions.
 
 The example/test creates a sports2020 database, compiles `getcustomers.p` (which needs the db) and puts it in the sports2020 which is placed in `/artifacts` along with a file list (`prolib -list`).
+
+# tips
+The compiler run as the `openedge` user.
+When compiling on for example github, compile to a dir the container own (NOT what you mount to `/app/src` as you may not have writing permissions).
+For the same reason, set `tempDir` to a dir the container owns (f.e. `/usr/wrk`)
+
+# tags
+latest = 12.8.4
