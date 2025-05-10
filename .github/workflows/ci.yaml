@@ -65,10 +65,10 @@ jobs:
           cd src
           docker build -t openedge-compiler:${{env.OPENEDGE_VERSION}} .
       
-      - name: Build dotnet docker image
-        run: |
-          cd src
-          docker build -t openedge-compiler:${{env.OPENEDGE_VERSION}}-dotnet8 -f Dockerfile-dotnet .
+      # - name: Build dotnet docker image
+      #   run: |
+      #     cd src
+      #     docker build -t openedge-compiler:${{env.OPENEDGE_VERSION}}-dotnet8 -f Dockerfile-dotnet .
 
       - name: Remove installer files
         run: |
