@@ -3,6 +3,9 @@
 #ls -l /install/patch/
 echo "******** install base **************************************************************************************"
 /install/openedge/proinst -b /install/openedge/response.ini -l /install/install_oe.log -n
+cat /install/install_oe.log
+
+echo "******** install base done **************************************************************************************"
 
 if [ -f /install/patch/proinst ]; then 
   echo "Installing patch"
