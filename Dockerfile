@@ -1,4 +1,4 @@
-FROM ubuntu:22.04 as install
+FROM ubuntu:22.04 AS install
 
 ENV JAVA_HOME=/opt/java/openjdk
 COPY --from=eclipse-temurin:JDKVERSION $JAVA_HOME $JAVA_HOME
@@ -11,7 +11,7 @@ ADD PROGRESS_PATCH_OE.tar.gz /install/patch/
 ADD scripts/install-openedge.sh /install/
 
 COPY response.ini /install/openedge/response.ini
-ENV TERM xterm
+ENV TERM=linux
 
 RUN /install/install-openedge.sh
 
@@ -23,14 +23,14 @@ COPY clean-dlc.sh /install/openedge/clean-dlc.sh
 RUN /install/openedge/clean-dlc.sh
 
 # multi stage build, this give the possibilty to remove all the slack from stage 0
-FROM ubuntu:22.04 as instance
+FROM ubuntu:22.04 AS instance
 
 LABEL maintainer="Bronco Oostermeyer <dev@bfv.io>"
 
 ENV JAVA_HOME=/opt/java/openjdk
 ENV DLC=/usr/dlc
 ENV WRKDIR=/usr/wrk
-ENV TERM=xterm
+ENV TERM=linux
 
 RUN groupadd -g 1000 openedge && \
     useradd -r -u 1000 -g openedge openedge

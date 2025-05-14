@@ -2,6 +2,9 @@
 artifacts/
 license/
 
+response.ini
+progress.cfg
+
 response-*.ini
 progress-*.ini
 
