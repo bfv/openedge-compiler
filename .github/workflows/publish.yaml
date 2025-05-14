@@ -75,21 +75,21 @@ jobs:
           echo "${{ secrets[format('PROGRESS_CFG_{0}', env.FLATVERSION)] }}" | base64 --decode > src/progress.cfg
           ls -l src
 
-      - name: Prepare Dockerfile-dotnet
-        run: |
-          oever=$OPENEDGE_VERSION
-          sed -i "s/OPENEDGEVERSION/$oever/g" src/Dockerfile-dotnet
-          cat src/Dockerfile-dotnet
+      # - name: Prepare Dockerfile-dotnet
+      #   run: |
+      #     oever=$OPENEDGE_VERSION
+      #     sed -i "s/OPENEDGEVERSION/$oever/g" src/Dockerfile-dotnet
+      #     cat src/Dockerfile-dotnet
 
       - name: Build plain docker image
         run: |
           cd src
           docker build -t ${{env.IMAGE_NAME}} .
         
-      - name: Build dotnet docker image
-        run: |
-          cd src
-          docker build -t ${{env.IMAGE_NAME}}-dotnet8 -f Dockerfile-dotnet .
+      # - name: Build dotnet docker image
+      #   run: |
+      #     cd src
+      #     docker build -t ${{env.IMAGE_NAME}}-dotnet8 -f Dockerfile-dotnet .
   
       - name: Remove installer files
         run: |
