@@ -1,4 +1,4 @@
-FROM ubuntu:22.04 AS install
+FROM ubuntu:24.04 AS install
 
 ENV JAVA_HOME=/opt/java/openjdk
 COPY --from=eclipse-temurin:JDKVERSION $JAVA_HOME $JAVA_HOME
@@ -23,7 +23,7 @@ COPY clean-dlc.sh /install/openedge/clean-dlc.sh
 RUN /install/openedge/clean-dlc.sh
 
 # multi stage build, this give the possibilty to remove all the slack from stage 0
-FROM ubuntu:22.04 AS instance
+FROM ubuntu:24.04 AS instance
 
 LABEL maintainer="Bronco Oostermeyer <dev@bfv.io>"
 
@@ -32,7 +32,10 @@ ENV DLC=/usr/dlc
 ENV WRKDIR=/usr/wrk
 ENV TERM=linux
 
-RUN groupadd -g 1000 openedge && \
+# ubuntu 24.04 has the user ubuntu as user 1000, which is not compatible with the openedge installation
+# this user is removed and replaced with a new user openedge with uid 1000
+RUN userdel -r ubuntu && \
+    groupadd -g 1000 openedge && \
     useradd -r -u 1000 -g openedge openedge
 
 COPY --from=install $JAVA_HOME $JAVA_HOME
@@ -53,6 +56,8 @@ RUN touch /usr/dlc/progress.cfg  && \
 
 RUN mkdir -p /app/src && mkdir /artifacts && \
     chown -R openedge:openedge /app /artifacts
+
+COPY protocols /etc/protocols
 
 USER openedge
 
