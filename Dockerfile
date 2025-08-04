@@ -1,4 +1,4 @@
-FROM ubuntu:24.04 AS install
+FROM ubuntu:24.10 AS install
 
 ENV JAVA_HOME=/opt/java/openjdk
 COPY --from=eclipse-temurin:JDKVERSION $JAVA_HOME $JAVA_HOME
@@ -23,7 +23,7 @@ COPY clean-dlc.sh /install/openedge/clean-dlc.sh
 RUN /install/openedge/clean-dlc.sh
 
 # multi stage build, this give the possibilty to remove all the slack from stage 0
-FROM ubuntu:24.04 AS instance
+FROM ubuntu:24.10 AS instance
 
 LABEL maintainer="Bronco Oostermeyer <dev@bfv.io>"
 
