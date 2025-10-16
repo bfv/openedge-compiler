@@ -87,6 +87,7 @@
         <fileset dir="${srcdir}" excludesfile="${srcdir}/build.excludes">
           <include name="**/*.p" />
           <include name="**/*.cls" />
+          <exclude name="**/dotnet-*.p" />
         </fileset>
           
       </PCTCompile>
