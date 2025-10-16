@@ -1,2 +1,2 @@
-var obj = new System.Object().
-message obj.ToString().
+var System.Object obj = new System.Object().
+message obj:ToString().
