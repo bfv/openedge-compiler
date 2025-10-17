@@ -14,7 +14,7 @@ jobs:
     
     strategy:
       matrix:
-        version: [ 12.8.3, 12.8.8 ]
+        version: [ 12.8.3, 12.8.9 ]
     
     steps:
 
@@ -91,5 +91,11 @@ jobs:
             /app/src/scripts/build.sh
           ls -l artifacts
           cat artifacts/sports2020.rcode.list
-          
-  
+
+      - name: Execute dotnet test
+        run: |
+          docker run \
+            -v ${PWD}/src/src:/app/src \
+            -v ${PWD}/src/progress.cfg:/usr/dlc/progress.cfg \
+            devbfvio/openedge-compiler:${{env.OPENEDGE_VERSION}}-dotnet8 \
+            /usr/dlc/bin/_progres -b -p /app/src/dotnet-validate.p

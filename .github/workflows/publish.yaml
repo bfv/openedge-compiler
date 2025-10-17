@@ -6,12 +6,12 @@ on:
       openedgeversion:
         type: string
         description: "OpenEdge version"
-        default: "12.8.8"
+        default: "12.8.9"
         required: true
       targettag:
           type: string
           description: "target tag"
-          default: "12.8.8"
+          default: "12.8.9"
           required: true
       targetregistry:
         type: choice

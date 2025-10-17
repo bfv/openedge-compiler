@@ -8,7 +8,8 @@ RUN apt update \
   && rm -rf /var/lib/apt/lists/*
 
 RUN \
-sed -i "s/net6\.0/net8\.0/g" /usr/dlc/bin/Progress.clrbridge.netcore.runtimeconfig.json && \
-  sed -i "s/6\.0\.0/8\.0\.0/g" /usr/dlc/bin/Progress.clrbridge.netcore.runtimeconfig.json
+  sed -i "s/net6\.0/net8\.0/g" /usr/dlc/bin/Progress.clrbridge.netcore.runtimeconfig.json && \
+  sed -i "s/6\.0\.0/8\.0\.0/g" /usr/dlc/bin/Progress.clrbridge.netcore.runtimeconfig.json && \
+  echo "-clrnetcore" >> /usr/dlc/startup.pf
 
 USER openedge

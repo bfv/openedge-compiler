@@ -55,7 +55,8 @@ RUN touch /usr/dlc/progress.cfg  && \
     chown openedge:openedge /usr/dlc/progress.cfg
 
 RUN mkdir -p /app/src && mkdir /artifacts && \
-    chown -R openedge:openedge /app /artifacts
+    chown -R openedge:openedge /app /artifacts && \
+    echo "-T /usr/wrk" >> /usr/dlc/startup.pf
 
 COPY protocols /etc/protocols
 
