@@ -99,3 +99,16 @@ jobs:
             -v ${PWD}/src/progress.cfg:/usr/dlc/progress.cfg \
             devbfvio/openedge-compiler:${{env.OPENEDGE_VERSION}}-dotnet8 \
             /usr/dlc/bin/_progres -b -p /app/src/dotnet-validate.p
+
+      - name: Generate SBOM (CycloneDX JSON)
+        uses: anchore/sbom-action@fbfd9c6c189226748411491745178e0c2017392d  # v0.20.10
+        with:
+          image: devbfvio/openedge-compiler:${{env.OPENEDGE_VERSION}}
+          # output: sbom-cyclonedx-plain.json
+
+      # - name: Generate SBOM (CycloneDX JSON)
+      #   uses: anchore/syft-action@a033ae525f6c7ef937c6f49513e3403f07a1d6c0
+      #   with:
+      #     image: devbfvio/openedge-compiler:${{env.OPENEDGE_VERSION}}-dotnet8
+      #     output: sbom-cyclonedx-dotnet8.json
+
