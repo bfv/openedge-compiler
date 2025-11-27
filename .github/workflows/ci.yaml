@@ -100,22 +100,35 @@ jobs:
             devbfvio/openedge-compiler:${{env.OPENEDGE_VERSION}}-dotnet8 \
             /usr/dlc/bin/_progres -b -p /app/src/dotnet-validate.p
 
-      - name: Generate SBOM (SPDX JSON)
-        uses: anchore/sbom-action@fbfd9c6c189226748411491745178e0c2017392d  # v0.20.10
+      # generate SBOM's
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@faadad0cce49287aee09b3a48701e75088a2c6ad  # v4.0.0
         with:
-          image: devbfvio/openedge-compiler:${{env.OPENEDGE_VERSION}}
-          format: spdx-json
-          # output: sbom-cyclonedx-plain.json
+          cosign-release: 'v3.0.2'
 
       - name: Generate SBOM (CycloneDX JSON)
         uses: anchore/sbom-action@fbfd9c6c189226748411491745178e0c2017392d  # v0.20.10
         with:
           image: devbfvio/openedge-compiler:${{env.OPENEDGE_VERSION}}
           format: cyclonedx-json
+          artifact-name: devbfvio-openedge-compiler-${{env.FLATVERSION}}.cyclonedx.json
 
-      # - name: Generate SBOM (CycloneDX JSON)
-      #   uses: anchore/syft-action@a033ae525f6c7ef937c6f49513e3403f07a1d6c0
-      #   with:
-      #     image: devbfvio/openedge-compiler:${{env.OPENEDGE_VERSION}}-dotnet8
-      #     output: sbom-cyclonedx-dotnet8.json
+      - name: Generate SBOM (SPDX JSON)
+        uses: anchore/sbom-action@fbfd9c6c189226748411491745178e0c2017392d  # v0.20.10
+        with:
+          image: devbfvio/openedge-compiler:${{env.OPENEDGE_VERSION}}
+          format: spdx-json
+          artifact-name: devbfvio-openedge-compiler-${{env.FLATVERSION}}.spdx.json
 
+      - name: Attach CycloneDX SBOM
+        run: |
+          cosign attach sbom devbfvio/openedge-compiler:${{env.OPENEDGE_VERSION}} \
+            --sbom devbfvio-openedge-compiler-${{env.FLATVERSION}}.cyclonedx.json \
+            --type cyclonedx
+
+      - name: Attach SPDX SBOM
+        run: |
+          cosign attach sbom devbfvio/openedge-compiler:${{env.OPENEDGE_VERSION}} \
+            --sbom devbfvio-openedge-compiler-${{env.FLATVERSION}}.spdx.json \
+            --type spdx
