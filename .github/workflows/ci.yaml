@@ -112,11 +112,11 @@ jobs:
         with:
           image: devbfvio/openedge-compiler:${{env.OPENEDGE_VERSION}}
           format: cyclonedx-json
-          artifact-name: devbfvio-openedge-compiler-${{env.FLATVERSION}}.cyclonedx.json
+          artifact-name: devbfvio-openedge-compiler-${{env.OPENEDGE_VERSION}}.cyclonedx.json
 
       - name: Generate SBOM (SPDX JSON)
         uses: anchore/sbom-action@fbfd9c6c189226748411491745178e0c2017392d  # v0.20.10
         with:
           image: devbfvio/openedge-compiler:${{env.OPENEDGE_VERSION}}
           format: spdx-json
-          artifact-name: devbfvio-openedge-compiler-${{env.FLATVERSION}}.spdx.json
+          artifact-name: devbfvio-openedge-compiler-${{env.OPENEDGE_VERSION}}.spdx.json
