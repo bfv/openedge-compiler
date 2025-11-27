@@ -120,15 +120,3 @@ jobs:
           image: devbfvio/openedge-compiler:${{env.OPENEDGE_VERSION}}
           format: spdx-json
           artifact-name: devbfvio-openedge-compiler-${{env.FLATVERSION}}.spdx.json
-
-      - name: Attach CycloneDX SBOM
-        run: |
-          cosign attach sbom devbfvio/openedge-compiler:${{env.OPENEDGE_VERSION}} \
-            --sbom devbfvio-openedge-compiler-${{env.FLATVERSION}}.cyclonedx.json \
-            --type cyclonedx
-
-      - name: Attach SPDX SBOM
-        run: |
-          cosign attach sbom devbfvio/openedge-compiler:${{env.OPENEDGE_VERSION}} \
-            --sbom devbfvio-openedge-compiler-${{env.FLATVERSION}}.spdx.json \
-            --type spdx
