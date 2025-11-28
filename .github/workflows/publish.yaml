@@ -81,56 +81,80 @@ jobs:
           sed -i "s/OPENEDGEVERSION/$oever/g" src/Dockerfile-dotnet
           cat src/Dockerfile-dotnet
 
-      - name: Build plain docker image
-        run: |
-          cd src
-          docker build -t ${{env.IMAGE_NAME}} .
-        
-      - name: Build dotnet docker image
-        run: |
-          cd src
-          docker build -t ${{env.IMAGE_NAME}}-dotnet8 -f Dockerfile-dotnet .
-  
-      - name: Remove installer files
-        run: |
-          cd src
-          rm -f PROGRESS_*
-          rm response.ini
-          ls -l 
-      
-      - name: Execute test build
-        run: |
-          ls -l 
-          mkdir artifacts
-          chmod ugo=rwx -R ${PWD}/artifacts 
-          chmod u=rwx,og=rx -R ${PWD}/src   # don't write to src!
-          docker run \
-            -v ${PWD}/src/src:/app/src \
-            -v ${PWD}/artifacts:/artifacts \
-            -v ${PWD}/src/progress.cfg:/usr/dlc/progress.cfg \
-            ${{env.IMAGE_NAME}} \
-            /app/src/scripts/build.sh
-          ls -l artifacts
-          cat artifacts/sports2020.rcode.list
-
-      - name: Generate SBOM (CycloneDX JSON)
-        uses: anchore/syft-action@v0.9.0
-        with:
-          image: ${{env.IMAGE_NAME}}
-          output: sbom-cyclonedx.json
-
       - name: Login to registry
         uses: docker/login-action@0d4c9c5ea7693da7b068278f7b52bda2a190a446  # v3.2.0
         with:
           registry: ${{ vars.REGISTRY_DOMAIN }}
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
-      
-      - name: Push plain image to registry
-        run: |
-          docker push ${{env.IMAGE_NAME}}
 
-      - name: Push docker image to registry
-        run: |
-          docker push ${{env.IMAGE_NAME}}-dotnet8
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435  # v3.11.1
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051  # v5.10.0
+        with:
+          images: ${{ env.IMAGE_NAME }}
+
+      - name: Build and push image
+        uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83  # v6.18.0
+        with:
+          sbom: true
+          provenance: mode=max
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+
+      # - name: Build plain docker image
+      #   run: |
+      #     cd src
+      #     docker build -t ${{env.IMAGE_NAME}} .
+        
+      # - name: Build dotnet docker image
+      #   run: |
+      #     cd src
+      #     docker build -t ${{env.IMAGE_NAME}}-dotnet8 -f Dockerfile-dotnet .
+  
+      # - name: Remove installer files
+      #   run: |
+      #     cd src
+      #     rm -f PROGRESS_*
+      #     rm response.ini
+      #     ls -l 
+      
+      # - name: Execute test build
+      #   run: |
+      #     ls -l 
+      #     mkdir artifacts
+      #     chmod ugo=rwx -R ${PWD}/artifacts 
+      #     chmod u=rwx,og=rx -R ${PWD}/src   # don't write to src!
+      #     docker run \
+      #       -v ${PWD}/src/src:/app/src \
+      #       -v ${PWD}/artifacts:/artifacts \
+      #       -v ${PWD}/src/progress.cfg:/usr/dlc/progress.cfg \
+      #       ${{env.IMAGE_NAME}} \
+      #       /app/src/scripts/build.sh
+      #     ls -l artifacts
+      #     cat artifacts/sports2020.rcode.list
+
+      # - name: Generate SBOM (CycloneDX JSON)
+      #   uses: anchore/syft-action@v0.9.0
+      #   with:
+      #     image: ${{env.IMAGE_NAME}}
+      #     output: sbom-cyclonedx.json
+
+      # - name: Login to registry
+      #   uses: docker/login-action@0d4c9c5ea7693da7b068278f7b52bda2a190a446  # v3.2.0
+      #   with:
+      #     registry: ${{ vars.REGISTRY_DOMAIN }}
+      #     username: ${{ secrets.REGISTRY_USERNAME }}
+      #     password: ${{ secrets.REGISTRY_PASSWORD }}
+      
+      # - name: Push plain image to registry
+      #   run: |
+      #     docker push ${{env.IMAGE_NAME}}
+
+      # - name: Push docker image to registry
+      #   run: |
+      #     docker push ${{env.IMAGE_NAME}}-dotnet8
   
