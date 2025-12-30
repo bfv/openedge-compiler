@@ -1,5 +1,7 @@
 # openedge-compiler
 
+![Build Status CI](https://github.com/bfv/openedge-compiler/actions/workflows/ci.yaml/badge.svg)
+
 This repo contains the nuts and bolts to create a OpenEdge compiler (OEC) Docker image. It has a template `Dockerfile` as well as Github workflows for CI and publishing releases of the OEC. Futhermore the JDK used for installing OpenEdge in the first place is configurable via `jdk-versions.json`
 
 ## Semantic and flattened version numbers
