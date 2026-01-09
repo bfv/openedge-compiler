@@ -89,5 +89,9 @@ The compiler run as the `openedge` user.
 When compiling on for example github, compile to a dir the container own (NOT what you mount to `/app/src` as you may not have writing permissions).
 For the same reason, set `tempDir` to a dir the container owns (f.e. `/usr/wrk`)
 
+# .NET 
+Previously there was a `-dotnet8` postfix. 
+For 12.8.9.1 this postfix will be `-dotnet10`, the latest LTS runtime.
+
 # tags
-latest = 12.8.4
+latest = 12.8.9.1

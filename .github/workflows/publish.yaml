@@ -89,7 +89,7 @@ jobs:
       - name: Build dotnet docker image
         run: |
           cd src
-          docker build -t ${{env.IMAGE_NAME}}-dotnet8 -f Dockerfile-dotnet .
+          docker build -t ${{env.IMAGE_NAME}}-dotnet10 -f Dockerfile-dotnet .
   
       - name: Remove installer files
         run: |
@@ -126,5 +126,5 @@ jobs:
 
       - name: Push docker image to registry
         run: |
-          docker push ${{env.IMAGE_NAME}}-dotnet8
+          docker push ${{env.IMAGE_NAME}}-dotnet10
   
