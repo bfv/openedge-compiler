@@ -14,7 +14,7 @@ jobs:
     
     strategy:
       matrix:
-        version: [ 12.8.3, 12.8.4, 12.8.9 ]
+        version: [ 12.8.9 ]
     
     steps:
 
@@ -68,7 +68,7 @@ jobs:
       - name: Build dotnet docker image
         run: |
           cd src
-          docker build -t devbfvio/openedge-compiler:${{env.OPENEDGE_VERSION}}-dotnet8 -f Dockerfile-dotnet .
+          docker build -t devbfvio/openedge-compiler:${{env.OPENEDGE_VERSION}}-dotnet10 -f Dockerfile-dotnet .
 
       - name: Remove installer files
         run: |
@@ -97,5 +97,5 @@ jobs:
           docker run \
             -v ${PWD}/src/src:/app/src \
             -v ${PWD}/src/progress.cfg:/usr/dlc/progress.cfg \
-            devbfvio/openedge-compiler:${{env.OPENEDGE_VERSION}}-dotnet8 \
+            devbfvio/openedge-compiler:${{env.OPENEDGE_VERSION}}-dotnet10 \
             /usr/dlc/bin/_progres -b -p /app/src/dotnet-validate.p

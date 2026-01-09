@@ -2,7 +2,8 @@
 
 | tag | date | notes |
 |---|---|---|
-| 12.8.10  | <t.b.d.>   | `-T /usr/wrk` in startup.pf |
+| 12.8.9.1 | 206-01-09  | bumped .NET to 10.0 |
+|          |            | `-T /usr/wrk` in startup.pf |
 |          |            | `-clrnetcore` in startup.pf (dotnet only)
 | 12.8.9   | 2025-08-16 | patch only |
 | 12.8.8   | 2025-07-05 | ubuntu to 24.04
