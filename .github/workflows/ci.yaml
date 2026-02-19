@@ -14,7 +14,7 @@ jobs:
     
     strategy:
       matrix:
-        version: [ 12.8.9 ]
+        version: [ 12.8.9, 13.0.0 ]
     
     steps:
 
