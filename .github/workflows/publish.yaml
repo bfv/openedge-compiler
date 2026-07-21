@@ -77,7 +77,7 @@ jobs:
 
       - name: Prepare Dockerfile-dotnet
         run: |
-          oever=$OPENEDGE_VERSION
+          oever=${{ inputs.targettag }}
           sed -i "s/OPENEDGEVERSION/$oever/g" src/Dockerfile-dotnet
           cat src/Dockerfile-dotnet
 
