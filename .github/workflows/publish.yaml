@@ -137,7 +137,12 @@ jobs:
         with:
           cosign-release: 'v3.0.2'
 
+      - name: Get image digests
+        run: |
+          echo "IMAGE_DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ env.IMAGE_NAME }})" >> $GITHUB_ENV
+          echo "IMAGE_DIGEST_DOTNET=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ env.IMAGE_NAME }}-dotnet10)" >> $GITHUB_ENV
+
       - name: Sign images (keyless)
         run: |
-          cosign sign --yes ${{ env.IMAGE_NAME }}
-          cosign sign --yes ${{ env.IMAGE_NAME }}-dotnet10
+          cosign sign --yes ${{ env.IMAGE_DIGEST }}
+          cosign sign --yes ${{ env.IMAGE_DIGEST_DOTNET }}
