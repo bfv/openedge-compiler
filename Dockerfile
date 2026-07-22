@@ -16,7 +16,6 @@ ENV TERM=linux
 RUN /install/install-openedge.sh
 
 RUN cat /install/install_oe.log
-RUN /usr/dlc/bin/proDebugEnable -enable-all
 RUN rm /usr/dlc/progress.cfg
 
 COPY clean-dlc.sh /install/openedge/clean-dlc.sh
