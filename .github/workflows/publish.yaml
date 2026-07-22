@@ -29,6 +29,10 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      id-token: write   # required for cosign keyless signing (OIDC)
+
     environment:
         name: ${{ github.event.inputs.targetregistry }}
 
@@ -127,4 +131,13 @@ jobs:
       - name: Push docker image to registry
         run: |
           docker push ${{env.IMAGE_NAME}}-dotnet10
-  
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@faadad0cce49287aee09b3a48701e75088a2c6ad  # v4.0.0
+        with:
+          cosign-release: 'v3.0.2'
+
+      - name: Sign images (keyless)
+        run: |
+          cosign sign --yes ${{ env.IMAGE_NAME }}
+          cosign sign --yes ${{ env.IMAGE_NAME }}-dotnet10
