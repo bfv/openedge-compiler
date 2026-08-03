@@ -1,0 +1,13 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": ["^jdk-versions\\.json$"],
+      "matchStrings": ["\"jdk\\d+\":\\s*\"(?<currentValue>[^\"]+)\""],
+      "depNameTemplate": "eclipse-temurin",
+      "datasourceTemplate": "docker"
+    }
+  ]
+}
