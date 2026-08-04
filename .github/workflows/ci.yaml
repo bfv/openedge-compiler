@@ -19,13 +19,13 @@ jobs:
     steps:
 
       - name: Checkout repository
-        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29  # v4.1.6
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
         with:
           path: src
 
       - name: Get OpenEdge version
         id: get-oeversion
-        uses: bfv/openedge-flatversion@49ecdca1670447fcf715c0b505607ec17dc59b62  # v1.2.1
+        uses: bfv/openedge-flatversion@cd00d571e79c7a7be1d1d0ecce22febb2fb7dd0c  # v1.2.3
         with:
           version: ${{matrix.version}}
 
@@ -103,19 +103,19 @@ jobs:
       # generate SBOM's
 
       - name: Install cosign
-        uses: sigstore/cosign-installer@faadad0cce49287aee09b3a48701e75088a2c6ad  # v4.0.0
+        uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6  # v4.1.2
         with:
-          cosign-release: 'v3.0.2'
+          cosign-release: 'v3.1.2'
 
       - name: Generate SBOM (CycloneDX JSON)
-        uses: anchore/sbom-action@fbfd9c6c189226748411491745178e0c2017392d  # v0.20.10
+        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610  # v0.24.0
         with:
           image: devbfvio/openedge-compiler:${{env.OPENEDGE_VERSION}}
           format: cyclonedx-json
           artifact-name: devbfvio-openedge-compiler-${{env.OPENEDGE_VERSION}}.cyclonedx.json
 
       - name: Generate SBOM (SPDX JSON)
-        uses: anchore/sbom-action@fbfd9c6c189226748411491745178e0c2017392d  # v0.20.10
+        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610  # v0.24.0
         with:
           image: devbfvio/openedge-compiler:${{env.OPENEDGE_VERSION}}
           format: spdx-json
