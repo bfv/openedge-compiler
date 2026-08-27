@@ -21,6 +21,7 @@ on:
         options:
           - dockerhub-devbfvio
           - flusso-boostermeyer
+          - registry.bfv.io/openedge/compiler
               
 run-name: publish openedge-compiler:${{ inputs.targettag }} to ${{ github.event.inputs.targetregistry }}
 
@@ -28,6 +29,10 @@ jobs:
   publish:
 
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      id-token: write   # required for cosign keyless signing (OIDC)
 
     environment:
         name: ${{ github.event.inputs.targetregistry }}
@@ -54,7 +59,7 @@ jobs:
           echo "FLATVERSION=${{ steps.get-oeversion.outputs.flat-version }}" >> $GITHUB_ENV
           echo "OPENEDGE_VERSION=${{ inputs.openedgeversion }}" >> $GITHUB_ENV
           echo "OPENEDGE_BASE_VERSION=${{ steps.get-oeversion.outputs.base-version }}" >> $GITHUB_ENV
-          echo "IMAGE_NAME=${{ vars.REGISTRY_DOMAIN }}/${{ vars.IMAGE_PREFIX}}openedge-compiler:${{ inputs.targettag }}" >> $GITHUB_ENV
+          echo "IMAGE_NAME=${{ vars.REGISTRY_DOMAIN }}/${{ vars.IMAGE_PREFIX }}/${{ vars.IMAGE_SUFFIX }}:${{ inputs.targettag }}" >> $GITHUB_ENV
 
       - name: Insert JDK version in Dockerfile
         run: |
@@ -127,4 +132,18 @@ jobs:
       - name: Push docker image to registry
         run: |
           docker push ${{env.IMAGE_NAME}}-dotnet10
-  
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@faadad0cce49287aee09b3a48701e75088a2c6ad  # v4.0.0
+        with:
+          cosign-release: 'v3.0.2'
+
+      - name: Get image digests
+        run: |
+          echo "IMAGE_DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ env.IMAGE_NAME }})" >> $GITHUB_ENV
+          echo "IMAGE_DIGEST_DOTNET=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ env.IMAGE_NAME }}-dotnet10)" >> $GITHUB_ENV
+
+      - name: Sign images (keyless)
+        run: |
+          cosign sign --yes ${{ env.IMAGE_DIGEST }}
+          cosign sign --yes ${{ env.IMAGE_DIGEST_DOTNET }}
