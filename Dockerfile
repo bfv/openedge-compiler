@@ -17,8 +17,18 @@ RUN /install/install-openedge.sh
 RUN cat /install/install_oe.log
 RUN rm /usr/dlc/progress.cfg
 
+
 COPY clean-dlc.sh /install/openedge/clean-dlc.sh
 RUN /install/openedge/clean-dlc.sh
+
+RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates && \
+    PCT_RELEASE="$(curl -fsSL https://api.github.com/repos/Riverside-Software/pct/releases/latest)" && \
+    PCT_VERSION="$(printf '%s' "$PCT_RELEASE" | sed -n 's/.*"tag_name": *"v\([^"]*\)".*/\1/p')" && \
+    test -n "$PCT_VERSION" && \
+    mkdir -p /usr/dlc/pct && \
+    curl -fsSL "https://github.com/Riverside-Software/pct/releases/download/v${PCT_VERSION}/PCT.jar" -o /usr/dlc/pct/PCT.jar && \
+    printf '%s\n' "$PCT_VERSION" > /usr/dlc/pct/version.txt && \
+    rm -rf /var/lib/apt/lists/*
 
 # multi stage build, this give the possibilty to remove all the slack from stage 0
 FROM ubuntu:24.04 AS instance
