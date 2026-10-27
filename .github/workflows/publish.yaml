@@ -59,7 +59,7 @@ jobs:
           echo "FLATVERSION=${{ steps.get-oeversion.outputs.flat-version }}" >> $GITHUB_ENV
           echo "OPENEDGE_VERSION=${{ inputs.openedgeversion }}" >> $GITHUB_ENV
           echo "OPENEDGE_BASE_VERSION=${{ steps.get-oeversion.outputs.base-version }}" >> $GITHUB_ENV
-          echo "IMAGE_NAME=${{ vars.REGISTRY_DOMAIN }}/${{ vars.IMAGE_PREFIX }}/${{ vars.IMAGE_SUFFIX }}:${{ inputs.targettag }}" >> $GITHUB_ENV
+          echo "IMAGE_NAME=${{ vars.REGISTRY_DOMAIN }}/${{ vars.IMAGE_PREFIX }}${{ vars.IMAGE_SUFFIX }}:${{ inputs.targettag }}" >> $GITHUB_ENV
 
       - name: Insert JDK version in Dockerfile
         run: |
