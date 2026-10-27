@@ -17,10 +17,6 @@ RUN /install/install-openedge.sh
 RUN cat /install/install_oe.log
 RUN rm /usr/dlc/progress.cfg
 
-
-COPY clean-dlc.sh /install/openedge/clean-dlc.sh
-RUN /install/openedge/clean-dlc.sh
-
 RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates && \
     PCT_RELEASE="$(curl -fsSL https://api.github.com/repos/Riverside-Software/pct/releases/latest)" && \
     PCT_VERSION="$(printf '%s' "$PCT_RELEASE" | sed -n 's/.*"tag_name": *"v\([^"]*\)".*/\1/p')" && \
@@ -31,6 +27,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certifi
     rm -rf /var/lib/apt/lists/*
 
 # multi stage build, this give the possibilty to remove all the slack from stage 0
+COPY clean-dlc.sh /install/openedge/clean-dlc.sh
+RUN /install/openedge/clean-dlc.sh
+
 FROM ubuntu:24.04 AS instance
 
 LABEL maintainer="Bronco Oostermeyer <dev@bfv.io>"
